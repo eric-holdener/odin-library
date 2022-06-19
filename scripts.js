@@ -8,37 +8,84 @@ function Book(title, author, pages, read) {
 }
 
 function addBookToLibrary() {
-  let book = new Book(title, author, pages, read)
-  myLibrary.push(book)
+  title = document.getElementById('title').value;
+  author = document.getElementById('author').value;
+  pages = document.getElementById('pages').value;
+  read = document.getElementById('read').value;
+  let book = new Book(title, author, pages, read);
+  myLibrary.push(book);
+  index = myLibrary.length - 1
+  displayBook(book, index);
+
+  document.getElementById('title').value = ""
+  document.getElementById('author').value = ""
+  document.getElementById('pages').value = ""
+  document.getElementById('read').value = ""
 }
 
-function displayBooks() {
-  bookshelf = document.getElementsByClassName('bookshelf')
+function initializeBooks() {
+  book1 = new Book('Narnia', 'C.S Lewis', 100, false);
+  book2 = new Book('Harry Potter', 'JK Rowling', 100, true);
+  myLibrary.push(book1);
+  myLibrary.push(book2);
   myLibrary.forEach(function (item, index) {
-    let card = document.createElement('div');
-    card.classList.add('card');
-
-    let cardBody = document.createElement('div');
-    cardBody.classList.add('card-body');
-
-    let bookName = document.createElement('h2');
-    bookName.classList.add('card-title');
-    bookName.innerHTML = item.title;
-
-    let bookAuthor = document.createElement('h3');
-    bookAuthor.classList.add('card-subtitle');
-    bookAuthor.innerHTML = item.author;
-
-    let bookPages = document.createElement('p');
-    bookPages.classList.add('card-text');
-    bookPages.innerHTML = item.pages;
-
-    cardBody.appendChild(bookName);
-    cardBody.appendChild(bookAuthor);
-    cardBody.appendChild(bookPages);
-
-    card.appendChild(cardBody);
-
-    bookshelf.appendChild(card);
-  })
+    displayBook(item, index);
+  });
 }
+
+function displayBook(item, index) {
+  let card = document.createElement('div');
+  card.classList.add('card');
+
+  let cardBody = document.createElement('div');
+  cardBody.classList.add('card-body');
+
+  let bookName = document.createElement('h2');
+  bookName.classList.add('card-title');
+  bookName.innerHTML = item.title;
+
+  let bookAuthor = document.createElement('h3');
+  bookAuthor.classList.add('card-subtitle');
+  bookAuthor.innerHTML = item.author;
+
+  let bookPages = document.createElement('p');
+  bookPages.classList.add('card-text');
+  bookPages.innerHTML = item.pages;
+
+  let read = document.createElement('p');
+  read.classList.add('card-text');
+  if(item.read == true) {
+    read.innerHTML = 'I have read this book'
+  } else {
+    read.innerHTML = 'I have not read this book'
+  };
+
+  let delete_button = document.createElement('button')
+  delete_button.classList.add('btn');
+  delete_button.innerHTML = "Delete Book";
+  delete_button.addEventListener("click", function() {
+    deleteBook(index);
+  });
+
+  cardBody.appendChild(bookName);
+  cardBody.appendChild(bookAuthor);
+  cardBody.appendChild(bookPages);
+  cardBody.appendChild(read);
+  cardBody.appendChild(delete_button);
+
+  card.appendChild(cardBody);
+
+  card.dataset.id = index;
+
+  document.getElementById('bookshelf').appendChild(card)
+}
+
+function deleteBook(index) {
+  card = document.querySelector(`[data-id="${index}"]`);
+  myLibrary.splice(index, 1);
+  card.remove();
+}
+
+document.addEventListener("load", initializeBooks());
+add_button = document.getElementById("add-book");
+add_button.addEventListener("click", addBookToLibrary)
