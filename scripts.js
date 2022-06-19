@@ -54,6 +54,7 @@ function displayBook(item, index) {
 
   let read = document.createElement('p');
   read.classList.add('card-text');
+  read.classList.add('read');
   if(item.read == true) {
     read.innerHTML = 'I have read this book'
   } else {
@@ -67,11 +68,19 @@ function displayBook(item, index) {
     deleteBook(index);
   });
 
+  let read_button = document.createElement('button');
+  read_button.classList.add('btn');
+  read_button.innerHTML = "Mark as Read / Unread";
+  read_button.addEventListener("click", function() {
+    markAsRead(item, index);
+  });
+
   cardBody.appendChild(bookName);
   cardBody.appendChild(bookAuthor);
   cardBody.appendChild(bookPages);
   cardBody.appendChild(read);
   cardBody.appendChild(delete_button);
+  cardBody.appendChild(read_button);
 
   card.appendChild(cardBody);
 
@@ -84,6 +93,21 @@ function deleteBook(index) {
   card = document.querySelector(`[data-id="${index}"]`);
   myLibrary.splice(index, 1);
   card.remove();
+}
+
+function markAsRead(book, index) {
+  text = '';
+  if(book.read == true) {
+    book.read = false
+    text = 'I have read this book';
+  } else {
+    book.read = true
+    text = 'I have not read this book';
+  };
+  card = document.querySelector(`[data-id="${index}"]`);
+  card_body = card.firstChild;
+  read = card_body.querySelector('.read')
+  read.innerHTML = text
 }
 
 document.addEventListener("load", initializeBooks());
